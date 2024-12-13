@@ -20,7 +20,7 @@ C = params(9);
 phiR = params(10);
 deltaR = params(11);
 kappa = params(15);
-r1 = params(16)
+r1 = params(16);
 
 AL_initcond = 0;
 EL_initcond = 10;
@@ -30,7 +30,7 @@ EP_initcond = 0;
 RP_initcond = 0;
 B_initcond = 1*10^6;
 
-figurename = 'r2heatmapdynamics.pdf'
+figurename = 'r2heatmapdynamics.pdf';
 
 indvplots = 0;
 indvplots_compare = 1;
@@ -192,10 +192,14 @@ for i = 1:length(r2_vals)
             ylabel('B, cells', 'FontSize', 15)
             xlabel('Time, years', 'FontSize', 15)
             set(gca, 'Yscale', 'log')
-            ylim([10e4 10e5])
             xlim([0 10e2])
             yticks([10e-1 10e1 10e3 10e5])
             set(gcf, 'Position', [100, 300, 1400, 500]);
+             ylim([10^5 10e5])
+            % Define custom y-ticks
+            yticks([10^2, 10^4, 0.2 * B_initcond, 10^6]);
+            % Define custom y-tick labels
+            yticklabels({'10^2', '10^4', '20% B_0', '10^6'});
 
         end
 
@@ -248,12 +252,12 @@ if heatmapplots == 1
     latediseasepoint = [1.1*10^(-3), 0.01];
     nodiseasepoint = [2.5*10^(-3), 0.01];
 
-    scatter(earlydiseasepoint(1), earlydiseasepoint(2), 'filled', 'MarkerEdgeColor', 'k',...
-        'MarkerFaceColor', 'k', 'LineWidth',1.5);
-    scatter(latediseasepoint(1), latediseasepoint(2), 'filled', 'MarkerEdgeColor', 'k', ...
-        'MarkerFaceColor', 'k', 'LineWidth',1.5)
-    scatter(nodiseasepoint(1), nodiseasepoint(2), 'filled', 'MarkerEdgeColor', 'k', ...
-        'MarkerFaceColor', 'k', 'LineWidth',1.5)
+    % scatter(earlydiseasepoint(1), earlydiseasepoint(2), 'filled', 'MarkerEdgeColor', 'k',...
+    %     'MarkerFaceColor', 'k', 'LineWidth',1.5);
+    % scatter(latediseasepoint(1), latediseasepoint(2), 'filled', 'MarkerEdgeColor', 'k', ...
+    %     'MarkerFaceColor', 'k', 'LineWidth',1.5)
+    % scatter(nodiseasepoint(1), nodiseasepoint(2), 'filled', 'MarkerEdgeColor', 'k', ...
+    %     'MarkerFaceColor', 'k', 'LineWidth',1.5)
 
     set(gcf, 'Position', [100, 300, 800, 500]);
 
