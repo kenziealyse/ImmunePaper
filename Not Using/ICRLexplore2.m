@@ -1,0 +1,190 @@
+ 
+% CLEAR THE WORKSPACE
+clc
+clear
+close all
+
+% Set Model Conditions
+tspan = 0:.1:150*365;
+
+% Load Parameter Values
+params = LoadParameters();
+
+% Specify Parameter Values
+phiA = params(1);
+deltaA = params(2);
+lambdaEL = params(3);
+omegaEL = params(4);
+phiE = params(5);
+deltaE = params(6);
+lambdaR = params(7);
+omegaR = params(8);
+C = params(9);
+phiR = params(10);
+deltaR = params(11);
+kappa = params(15);
+
+% Specify Initial Conditions
+AL_initcond = 0;
+EL_initcond = 10;
+RL_initcond = 1e6;
+AP_initcond = 0;
+EP_initcond = 0;
+RP_initcond = 0;
+B_initcond = 1*10^6;
+
+% Save Initital Conditions in a Vector
+init_cond = [AL_initcond EL_initcond RL_initcond AP_initcond ...
+             EP_initcond RP_initcond B_initcond]';
+
+% Set Scaling Factor of EL and RL for Plotting
+scale = 1e7;
+
+% Define kE and kR
+kR = 1/((omegaR)/(C*(omegaR - (phiR+deltaR))));
+kE = 1/((omegaEL)/(C*(omegaEL - (phiE+deltaE))));
+
+% Define r1 and r2 Values for  early and late disease and high and low nu
+r1_vals = [0.2*10^(-5), 0.8*10^(-5)];
+r2_vals = [0.2*10^(-5), 1*10^(-5)];
+nu_vals = [0.01, 1*10^(-5)];
+
+% Specify Figure Name
+figurename = ['Figures\ELvsRL_earlyandlatedisease_RLis', num2str(RL_initcond), '.pdf'];
+
+%% Early Disease, High and Low Nu
+
+% Specify Parameter Values
+r1 = r1_vals(1);
+r2 = r2_vals(1);
+nu = nu_vals(1);
+
+% Save parameters in a vector
+params = [phiA deltaA lambdaEL omegaEL phiE deltaE lambdaR omegaR C ...
+      phiR deltaR kappa r1 r2 nu]';
+
+% Run the Model
+options = odeset('Events', @(t, Y) events(t, Y, NuRegTcellmodel(t,Y, params), B_initcond));
+[T,Y] = ode23s(@(t,Y) NuRegTcellmodel(t,Y, params), tspan, init_cond, options);
+
+% Relabel to easily keep track of desired compartments
+AL = Y(:,2);
+EL = Y(:,2);
+RL = Y(:,3);
+
+disp(T(end)./365)
+
+% Plot EL vs RL for high nu
+figure(1)
+subplot(1,2,1)
+plot(EL./scale, RL./scale, 'LineWidth', 2, 'Color', 'r', 'LineStyle', '-')
+xlabel('E_L \times 10^7', 'FontSize', 17)
+ylabel('R_L \times 10^7', 'FontSize', 17)
+hold on
+
+
+
+% Plotting Low nu Value
+nu = nu_vals(2);
+
+% Save parameters in a vector
+params = [phiA deltaA lambdaEL omegaEL phiE deltaE lambdaR omegaR C ...
+      phiR deltaR kappa r1 r2 nu]';
+
+% Run the Model
+options = odeset('Events', @(t, Y) events(t, Y, NuRegTcellmodel(t,Y, params), B_initcond));
+[T,Y] = ode23s(@(t,Y) NuRegTcellmodel(t,Y, params), tspan, init_cond, options);
+
+% Relabel to easily keep track of desired compartments
+EL = Y(:,2);
+RL = Y(:,3);
+
+disp(T(end)./365);
+
+% Plot EL vs RL for low nu and the line RL = -EL + kR (steady state set)
+plot(EL./scale, RL./scale, 'LineWidth', 2, 'Color', 'r', 'LineStyle', '--')
+plot([kE./scale 0], [0 kR./scale], '--', 'Color', [0.5, 0.5, 0.5], 'HandleVisibility', 'on', 'linewidth', 1)
+
+% Plot specifications
+xlabel('E_L \times 10^7', 'FontSize', 17)
+ylabel('R_L \times 10^7', 'FontSize', 17)
+legend('High \nu', 'Low \nu',...
+'R_L = -E_L + k_R', 'FontSize', 17)
+title('Early Disease Onset', 'FontSize', 17)
+xlim([0 0.1])
+
+% Set Plot Size
+set(gcf, 'Position', [100, 300, 1400, 500]);
+
+%% Late Disease, High and Low Nu
+
+% Specify Parameter Values
+r1 = r1_vals(2);
+r2 = r2_vals(2);
+nu = nu_vals(1);
+
+% Save parameters in a vector
+params = [phiA deltaA lambdaEL omegaEL phiE deltaE lambdaR omegaR C ...
+      phiR deltaR kappa r1 r2 nu]';
+
+% Run the Model
+options = odeset('Events', @(t, Y) events(t, Y, NuRegTcellmodel(t,Y, params), B_initcond));
+[T,Y] = ode23s(@(t,Y) NuRegTcellmodel(t,Y, params), tspan, init_cond, options);
+
+% Relabel to easily keep track of desired compartments
+EL = Y(:,2);
+RL = Y(:,3);
+
+disp(T(end)./365)
+
+% Plot EL vs RL for high nu
+figure(1)
+subplot(1,2,2)
+plot(EL./scale, RL./scale, 'LineWidth', 2, 'Color', 'b', 'LineStyle', '-')
+xlabel('E_L \times 10^7', 'FontSize', 17)
+ylabel('R_L \times 10^7', 'FontSize', 17)
+hold on
+
+% Plotting Low nu Value
+nu = nu_vals(2);
+
+% Save parameters in a vector
+params = [phiA deltaA lambdaEL omegaEL phiE deltaE lambdaR omegaR C ...
+      phiR deltaR kappa r1 r2 nu]';
+
+% Run the Model
+options = odeset('Events', @(t, Y) events(t, Y, NuRegTcellmodel(t,Y, params), B_initcond));
+[T,Y] = ode23s(@(t,Y) NuRegTcellmodel(t,Y, params), tspan, init_cond, options);
+
+% Relabel to easily keep track of desired compartments
+EL = Y(:,2);
+RL = Y(:,3);
+
+disp(T(end)./365);
+
+% Plot EL vs RL  for low nu and the line RL = -EL + kR (steady state set)
+plot(EL./scale, RL./scale, 'LineWidth', 2, 'Color', 'b', 'LineStyle', '--')
+plot([kE./scale 0], [0 kR./scale], '--', 'Color', [0.5, 0.5, 0.5], 'HandleVisibility', 'on', 'linewidth', 1)
+
+% Plot specifications
+xlabel('E_L \times 10^7', 'FontSize', 17)
+ylabel('R_L \times 10^7', 'FontSize', 17)
+legend('High \nu', 'Low \nu',...
+'R_L = -E_L + k_R', 'FontSize', 17)
+xlim([0 0.025])
+title('Late Disease Onset', 'FontSize', 17)
+
+% Save the figure as pdf
+set(gcf, 'Units', 'Inches');
+pos = get(gcf, 'Position');
+set(gcf, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos(3), pos(4)]);
+saveas(gcf, figurename); % Save Figure in Folder
+
+%% Event Function
+function [value, isterminal, direction] = events(~, y, ~, B_initcond)
+    B = y(7);
+    % disp(['B: ', num2str(B), ', Threshold: ', num2str(0.2 * B_initcond)]);
+    value = B - 0*B_initcond;  % Condition: stop when dydt is close to zero
+    isterminal = 1;  % Stop the integration
+    direction = -1;   % Detect all zeros (both rising and falling)
+end
