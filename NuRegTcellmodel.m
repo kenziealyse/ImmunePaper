@@ -1,11 +1,21 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This function defines the system of ODEs modeling the dynamics of 
+% regulatory and effector T-cells, antigen-presenting cells, and beta cell mass.
 %
+% Inputs:
+%   - ~      : time variable (not used explicitly)
+%   - Y       : state vector [AL, EL, RL, AP, EP, RP, B]
+%   - params  : vector of model parameters [phiA, deltaA, lambdaEL, omegaEL, phiE,
+%               deltaE, lambdaR, omegaR, C, phiR, deltaR, kappa, r1, r2, nu]
 %
+% Outputs:
+%   - DyDt    : derivatives of the state variables (rate of change)
 %
+% The model includes dynamics in the lymph nodes (AL, EL, RL), pancreas (AP, EP, RP),
+% and beta cell population (B), accounting for proliferation, activation, decay, 
+% and suppression mechanisms modulated by parameters r1 and r2.
 %
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function DyDt = NuRegTcellmodel(~, Y, params)
 

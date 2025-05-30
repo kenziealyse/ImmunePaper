@@ -1,17 +1,19 @@
-%% LoadParameters.m
-% This function initializes and returns a vector of model parameters used
-% in T cell dynamics and beta-cell mass simulations.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LoadParameters.m
 %
-% Parameters include:
-% - Transition rates for cell populations (phiA, phiR, phiE)
+% Returns a column vector of fixed model parameters including:
+% - Transition rates (phiA, phiR, phiE)
 % - Natural decay rates (deltaA, deltaR, deltaE, deltaP)
-% - Proliferation and activation rates (omegaEL, omegaRL, lambdaEL, lambdaR)
-% - Carrying capacity, APC/peptide interaction, and beta-cell death rate
-% - Regulatory T cell mechanism parameters (r1, r2)
+% - Proliferation rates (omegaEL, omegaRL)
+% - T cell activation rates (lambdaEL, lambdaR)
+% - Carrying capacity (C)
+% - APC and peptide related parameters (sigma, alpha)
+% - Beta cell death rate (kappa)
+% - Regulatory T-cell mechanism parameters (r1, r2)
 %
-% Returns:
-% - params: a column vector of all parameter values
-%
+% These parameters are used as inputs for the immune cell and beta cell ODE model.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function params = LoadParameters()
 
     % Transition rate parameters
@@ -47,7 +49,8 @@ function params = LoadParameters()
     r1 = 0;
     r2 = 0;
 
+    % Return parameters as a column vector
     params = [phiA deltaA lambdaEL omegaEL phiE deltaE lambdaR omegaRL C ...
-          phiR deltaR sigma alpha deltaP kappa r1 r2]';
+              phiR deltaR sigma alpha deltaP kappa r1 r2]';
 
 end
