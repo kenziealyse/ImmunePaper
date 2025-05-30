@@ -2,7 +2,7 @@
 
 
 
-## Plotting Files##
+## Plotting Files
 
 # OptimalDosingTimePlot.m
 This MATLAB script simulates the effect of different immunotherapy dosing 
@@ -58,32 +58,34 @@ This script simulates the effects of varying both the timing and dose
 of regulatory T cell therapy and APC depletion. The results are 
 visualized as a heatmap showing the difference in time
 to 20% beta cell mass compared to baseline disease progression.
-**Function Files**
 
-**PercentBetaCellMassEvent.m**  
+
+## Function Files
+
+## PercentBetaCellMassEvent.m 
 Event function to stop ODE integration when beta cell mass falls to 
 20% of its initial value, marking a critical disease threshold.
 
-**PercentBetaCellMassEvent_ConstantAPC.m**  
+## PercentBetaCellMassEvent_ConstantAPC.m
 Event function to stop ODE integration when beta cell mass falls to 
 20% of its initial value, marking a critical disease threshold, for
 model with constant APC.
 
-**LoadParameters.m**  
+## LoadParameters.m 
 Defines and returns a vector of fixed biological and model parameters 
 used in simulations.
 
-**NuRegTcellmodel.m**  
+## NuRegTcellmodel.m  
 Contains the system of ODEs modeling immune cell dynamics and beta cell 
 mass in the pancreas, parameterized by transition rates and regulatory 
 factors.
 
-**NuRegTcellmodel_constantA.m**  
+## NuRegTcellmodel_constantA.m  
 Contains the system of ODEs with constant APC modeling immune cell 
 dynamics and beta cell mass in the pancreas, parameterized by 
 transition rates and regulatory factors.
 
-**NuRegTcellmodel_withdepletion.m**  
+## NuRegTcellmodel_withdepletion.m
 Contains the system of ODEs when depleting APC modeling immune cell 
 dynamics and beta cell mass in the pancreas, parameterized by 
 transition rates and regulatory factors.
